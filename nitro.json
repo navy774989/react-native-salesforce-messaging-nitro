@@ -1,0 +1,17 @@
+{
+  "cxxNamespace": ["salesforcemessagingnitro"],
+  "ios": {
+    "iosModuleName": "SalesforceMessagingNitro"
+  },
+  "android": {
+    "androidNamespace": ["salesforcemessagingnitro"],
+    "androidCxxLibName": "salesforcemessagingnitro"
+  },
+  "autolinking": {
+    "SalesforceMessagingNitro": {
+      "swift": "SalesforceMessagingNitro",
+      "kotlin": "SalesforceMessagingNitro"
+    }
+  },
+  "ignorePaths": ["node_modules"]
+}
