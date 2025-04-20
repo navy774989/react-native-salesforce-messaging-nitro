@@ -1,12 +1,39 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'react-native-salesforce-messaging-nitro';
-
-const result = multiply(3, 7);
+import { View, StyleSheet, Pressable, Text } from 'react-native';
+import {
+  configureMessagingService,
+  openChatPage,
+  setPreChatData,
+} from 'react-native-salesforce-messaging-nitro';
 
 export default function App() {
+  const openChat = async () => {
+    const uuid = configureMessagingService(
+      'https://messaging-service-dev-ed.develop.lightning.force.com/services/apexrest/MessagingService/',
+      '00D000000000000',
+      'MessagingService'
+    );
+    setPreChatData({
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      phone: '1234567890',
+    });
+    if (uuid) {
+      openChatPage();
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Pressable
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{
+          borderColor: 'blue',
+          borderWidth: 1,
+        }}
+        onPress={() => openChat()}
+      >
+        <Text>Open Chat</Text>
+      </Pressable>
     </View>
   );
 }

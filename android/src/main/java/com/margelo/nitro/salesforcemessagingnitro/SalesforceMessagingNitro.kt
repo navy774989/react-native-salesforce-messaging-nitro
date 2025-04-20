@@ -1,10 +1,56 @@
 package com.margelo.nitro.salesforcemessagingnitro
-  
-import com.facebook.proguard.annotations.DoNotStrip
 
+import com.facebook.proguard.annotations.DoNotStrip
+import com.margelo.nitro.NitroModules
+import java.net.URL
+import java.util.UUID
+import com.salesforce.android.smi.core.*
+import com.salesforce.android.smi.network.data.domain.prechat.PreChatField
+import com.salesforce.android.smi.ui.*
 @DoNotStrip
 class SalesforceMessagingNitro : HybridSalesforceMessagingNitroSpec() {
-  override fun multiply(a: Double, b: Double): Double {
-    return a * b
+  var config : UIConfiguration? = null
+  override fun configureMessagingService(
+    serviceAPIUrl: String?,
+    organizationId: String,
+    developerName: String
+  ): String? {
+    serviceAPIUrl?.let {
+      val url = URL(it)
+      val coreConfig = CoreConfiguration(url, organizationId, developerName)
+      val conversationID = UUID.randomUUID()
+      config = UIConfiguration(coreConfig, conversationID)
+      return  conversationID.toString()
+    }
+    return null
   }
+
+  override fun openChatPage() {
+      config?.let {
+        val activity = NitroModules.applicationContext?.currentActivity
+        activity?.let { currentActivity ->
+            val uiClient = UIClient.Factory.create(it)
+            uiClient.openConversationActivity(currentActivity)
+        }
+      }
+  }
+  override fun setPreChatData(data: Map<String, String>) {
+    NitroModules.applicationContext?.applicationContext?.let { context ->
+      config?.let {
+        val coreClient = CoreClient.Factory.create(context, it)
+        coreClient.registerHiddenPreChatValuesProvider(object : PreChatValuesProvider {
+          override suspend fun setValues(input: List<PreChatField>): List<PreChatField> {
+            input.forEach {
+              data[it.name]?.let {
+                value ->  it.userInput = value
+              }
+
+            }
+            return input
+          }
+        })
+      }
+    }
+  }
+
 }

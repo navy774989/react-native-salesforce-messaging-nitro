@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/navy774989/react-native-salesforce-messaging-nitro.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
-
+  s.dependency "Messaging-InApp-UI"
   load 'nitrogen/generated/ios/SalesforceMessagingNitro+autolinking.rb'
   add_nitrogen_files(s)
 
